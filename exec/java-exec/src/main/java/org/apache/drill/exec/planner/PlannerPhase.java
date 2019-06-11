@@ -67,6 +67,7 @@ import org.apache.drill.exec.planner.physical.DirectScanPrule;
 import org.apache.drill.exec.planner.physical.FilterPrule;
 import org.apache.drill.exec.planner.physical.HashAggPrule;
 import org.apache.drill.exec.planner.physical.HashJoinPrule;
+import org.apache.drill.exec.planner.physical.IPFSWriterPrule;
 import org.apache.drill.exec.planner.physical.LimitPrule;
 import org.apache.drill.exec.planner.physical.LimitExchangeTransposeRule;
 import org.apache.drill.exec.planner.physical.MergeJoinPrule;
@@ -510,6 +511,8 @@ public enum PlannerPhase {
     ruleList.add(FilterPrule.INSTANCE);
     ruleList.add(LimitPrule.INSTANCE);
     ruleList.add(WriterPrule.INSTANCE);
+    //TODO: move this to IPFS package
+    ruleList.add(IPFSWriterPrule.INSTANCE);
     ruleList.add(WindowPrule.INSTANCE);
     ruleList.add(PushLimitToTopN.INSTANCE);
     ruleList.add(LimitExchangeTransposeRule.INSTANCE);

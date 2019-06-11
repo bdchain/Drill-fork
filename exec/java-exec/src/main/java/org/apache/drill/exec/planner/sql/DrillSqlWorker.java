@@ -46,6 +46,7 @@ import org.apache.drill.exec.planner.sql.handlers.SetOptionHandler;
 import org.apache.drill.exec.planner.sql.handlers.SqlHandlerConfig;
 import org.apache.drill.exec.planner.sql.parser.DrillSqlCall;
 import org.apache.drill.exec.planner.sql.parser.DrillSqlDescribeTable;
+import org.apache.drill.exec.planner.sql.parser.SqlCreateIPFSTable;
 import org.apache.drill.exec.planner.sql.parser.SqlCreateTable;
 import org.apache.drill.exec.planner.sql.parser.SqlSchema;
 import org.apache.drill.exec.testing.ControlsInjector;
@@ -184,7 +185,7 @@ public class DrillSqlWorker {
       case DROP_VIEW:
       case OTHER_DDL:
       case OTHER:
-        if(sqlNode instanceof SqlCreateTable) {
+        if(sqlNode instanceof SqlCreateTable || sqlNode instanceof SqlCreateIPFSTable) {
           handler = ((DrillSqlCall)sqlNode).getSqlHandler(config, textPlan);
           context.setSQLStatementType(SqlStatementType.CTAS);
           break;

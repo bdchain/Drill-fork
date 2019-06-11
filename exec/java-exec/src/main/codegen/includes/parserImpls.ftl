@@ -209,6 +209,15 @@ SqlNode SqlCreateOrReplace() :
 
             }
     |
+        <IPFSTABLE>
+            {
+                if (createType == "OR_REPLACE") {
+                    throw new ParseException("Create ipfstable statement does not allow <OR><REPLACE>.");
+                }
+                return SqlCreateIPFSTable(pos, isTemporary);
+
+            }
+    |
         <SCHEMA>
              {
                  if (isTemporary) {
@@ -281,6 +290,39 @@ SqlNode SqlCreateTable(SqlParserPos pos, boolean isTemporary) :
                                     SqlLiteral.createBoolean(tableNonExistenceCheck, getPos()));
     }
 }
+
+/**
+* IPFS extensions
+* Parses a CTAS or CTTAS statement.
+* CREATE [TEMPORARY] IPFSTABLE [IF NOT EXISTS] tblname [ (field1, field2, ...) ] AS select_statement.
+*/
+SqlNode SqlCreateIPFSTable(SqlParserPos pos, boolean isTemporary) :
+{
+    SqlIdentifier tblName;
+    SqlNodeList fieldList;
+    SqlNodeList partitionFieldList;
+    SqlNode query;
+    boolean tableNonExistenceCheck = false;
+}
+{
+    {
+        partitionFieldList = SqlNodeList.EMPTY;
+    }
+    ( <IF> <NOT> <EXISTS> { tableNonExistenceCheck = true; } )?
+    tblName = CompoundIdentifier()
+    fieldList = ParseOptionalFieldList("Table")
+    (   <PARTITION> <BY>
+        partitionFieldList = ParseRequiredFieldList("Partition")
+    )?
+    <AS>
+    query = OrderedQueryOrExpr(ExprContext.ACCEPT_QUERY)
+    {
+        return new SqlCreateIPFSTable(pos, tblName, fieldList, partitionFieldList, query,
+                                    SqlLiteral.createBoolean(isTemporary, getPos()),
+                                    SqlLiteral.createBoolean(tableNonExistenceCheck, getPos()));
+    }
+}
+
 
 /**
 * Parses create table schema statement after CREATE OR REPLACE SCHEMA statement

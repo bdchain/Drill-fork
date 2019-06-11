@@ -37,6 +37,7 @@
     "METADATA",
     "IF",
     "JAR",
+    "IPFSTABLE",
     "PROPERTIES",
     "ANALYZE",
     "COMPUTE",
